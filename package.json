@@ -1,0 +1,22 @@
+{
+  "name": "jwero-utils",
+  "version": "1.0.0",
+  "description": "This package includes all the required methods to be used within any Jwero project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Rahul-M-TanikaTech/jwero-utils.git"
+  },
+  "keywords": [
+    "jwero"
+  ],
+  "author": "Akshay Pagare",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rahul-M-TanikaTech/jwero-utils/issues"
+  },
+  "homepage": "https://github.com/Rahul-M-TanikaTech/jwero-utils#readme"
+}
