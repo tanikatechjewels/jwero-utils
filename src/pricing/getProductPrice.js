@@ -32,6 +32,8 @@ function getProductPrice({
   )
     return {};
 
+    console.log(Object.keys(productObj))
+
   const setupJweroLegacyProduct = (product) => {
     if (!isObjWithValues(product)) return product;
 
