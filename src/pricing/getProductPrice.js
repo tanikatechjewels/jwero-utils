@@ -911,7 +911,7 @@ function getProductPrice({
   return priceObj;
 }
 
-function setupJweroLegacyProduct(product) {
+const setupJweroLegacyProduct = (product) => {
   if (!isObjWithValues(product)) return product;
 
   let {
@@ -987,9 +987,9 @@ function setupJweroLegacyProduct(product) {
     colorstone_from,
     metal_types,
   };
-}
+};
 
-function checkTruthy(value) {
+const checkTruthy = (value) => {
   if (!value) {
     // check for falsy values
     return false;
@@ -1002,9 +1002,9 @@ function checkTruthy(value) {
   } else {
     return true;
   }
-}
+};
 
-function addPromotionStepper(obj) {
+const addPromotionStepper = (obj) => {
   let {
     min = 499,
     max = 999,
@@ -1032,7 +1032,7 @@ function addPromotionStepper(obj) {
     tax: Math.round(newTax),
     priceDifference: priceDifferenceWithoutTax,
   };
-}
+};
 
 const getMarginRate = ({
   product = {},
