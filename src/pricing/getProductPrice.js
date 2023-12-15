@@ -25,14 +25,21 @@ function getProductPrice({
   promotion_stepper,
 }) {
   // if (isObjWithValues(productObj)) return {};
+  console.log({
+    product_obj: isObjWithValues(productObj),
+    master_pricing: isObjWithValues(masterPricing),
+    product_settings: isObjWithValues(productSettings),
+    all_diamond_groups: isObjWithValues(allDiamondGroups),
+    tax: tax,
+    promotion_stepper: isObjWithValues(promotion_stepper),
+  });
+
   if (
     !isObjWithValues(productObj) ||
     !isObjWithValues(productSettings) ||
     !isObjWithValues(masterPricing)
   )
     return {};
-
-    console.log(Object.keys(productObj))
 
   const setupJweroLegacyProduct = (product) => {
     if (!isObjWithValues(product)) return product;
