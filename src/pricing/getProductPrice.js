@@ -911,6 +911,84 @@ function getProductPrice({
   return priceObj;
 }
 
+function setupJweroLegacyProduct(product) {
+  if (!isObjWithValues(product)) return product;
+
+  let {
+    metal_type,
+    metal_types,
+    metal_color,
+    gold_kt,
+    gold_gross,
+    gold_net,
+    gold_rate,
+    silver_gross,
+    silver_net,
+    platinium_gross,
+    platinium_net,
+    variants,
+    silver_purity,
+    platinium_purity,
+    hallmarked,
+    huid,
+    subcategory,
+    categories,
+    collections,
+    labourType,
+    labour_from,
+    labour_per_gram,
+    wastage_percent,
+    making_from,
+    minimum_making,
+    diamond,
+    colorstone_details,
+    diamond_from,
+    colorstone_from,
+    extra_charges,
+    onlyColorstone,
+    onlyDiamond,
+    custom_discounts,
+    labour_pricing_title,
+    minimum_labour,
+    per_gram,
+    labour: _labour_per_gram,
+    custom_wastage_from,
+  } = product;
+
+  if (labourType === "individual") labourType = "customize";
+  if (!labourType) labourType = "master";
+  if (diamond_from === "individual") diamond_from = "customize";
+  if (colorstone_from === "individual") colorstone_from = "customize";
+  if (minimum_labour) minimum_making = minimum_labour;
+  if (!diamond_from) diamond_from = "master";
+  if (!colorstone_from) colorstone_from = "master";
+
+  if (isArrayWithValues(metal_types))
+    metal_types = metal_types?.map((i) => i.toLowerCase());
+
+  if (metal_type && !isArrayWithValues(metal_types)) {
+    if (metal_type !== "multi") metal_types = [metal_type?.toLowerCase()];
+    else {
+      let array = [];
+      if (gold_gross) array.push("gold");
+      if (silver_gross) array.push("silver");
+      if (platinium_gross) array.push("platinium");
+      metal_types = array;
+    }
+  }
+  if (!metal_types || !isArrayWithValues(metal_types)) metal_types = ["gold"];
+  return {
+    ...product,
+    labourType,
+    diamond_from,
+    colorstone_from,
+    minimum_making,
+    diamond_from,
+    colorstone_from,
+    metal_types,
+  };
+}
+
 function checkTruthy(value) {
   if (!value) {
     // check for falsy values
