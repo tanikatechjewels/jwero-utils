@@ -38,7 +38,7 @@ const checkCustomizations = (obj) => {
   };
 };
 
-const removeEmptyStrings = (obj) => {
+function removeEmptyStrings(obj) {
   const result = {};
 
   for (const key in obj) {
@@ -53,9 +53,9 @@ const removeEmptyStrings = (obj) => {
   }
 
   return result;
-};
+}
 
-const transformProduct = (product) => {
+function transformProduct(product) {
   let transformed = {
     metal: {},
     diamond: {},
@@ -200,7 +200,7 @@ const transformProduct = (product) => {
   };
 
   return removeFalsy(transformed);
-};
+}
 
 const shopifyProductsMappingArray = [
   {
