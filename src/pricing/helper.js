@@ -1188,6 +1188,4 @@ module.exports = {
   defaultWoocommerceCustomerMapping,
   ebayProductMapping,
   getMarketplaceIdFromCountry,
-  removeEmptyStrings,
-  transformProduct,
 };
