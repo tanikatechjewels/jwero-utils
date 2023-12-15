@@ -38,6 +38,170 @@ const checkCustomizations = (obj) => {
   };
 };
 
+const removeEmptyStrings = (obj) => {
+  const result = {};
+
+  for (const key in obj) {
+    if (typeof obj[key] === "object") {
+      const nestedObj = removeEmptyStrings(obj[key]);
+      if (Object.keys(nestedObj).length > 0) {
+        result[key] = nestedObj;
+      }
+    } else if (obj[key] !== "") {
+      result[key] = obj[key];
+    }
+  }
+
+  return result;
+};
+
+const transformProduct = (product) => {
+  let transformed = {
+    metal: {},
+    diamond: {},
+    gemstone: {},
+    making: {},
+    extracharges: {},
+    breakup: {},
+  };
+
+  // Metal
+  for (let metalType of ["gold", "silver", "platinium"]) {
+    let grossKey = `${metalType}_gross`;
+    let netKey = `${metalType}_net`;
+    let purityKey = metalType === "gold" ? "gold_kt" : `${metalType}_purity`;
+    let frontEndKey = metalType;
+    if (metalType === "platinium") frontEndKey = "platinum";
+    let purity =
+      product.meta_data.find((item) => item.key === purityKey)?.value || "";
+    transformed.metal[frontEndKey] = {
+      [grossKey]:
+        product.meta_data.find((item) => item.key === grossKey)?.value || "",
+      [netKey]:
+        product.meta_data.find((item) => item.key === netKey)?.value || "",
+      [`${frontEndKey}_purity`]:
+        product.meta_data.find((item) => item.key === purityKey)?.value || "",
+      rate: product?.breakup?.metalRates?.[frontEndKey]?.[purity] || "",
+      amount: product?.breakup?.metalBreakup?.[frontEndKey] || "",
+    };
+  }
+
+  // Diamonds
+  let diamonds = product.meta_data.find(
+    (item) => item.key === "diamond"
+  )?.value;
+  // for (let key in diamonds) {
+  //     transformed.diamond[`${key}:`] = diamonds[key];
+  // }
+
+  if (diamonds) {
+    let diamondAmount = product?.breakup?.diamondBreakup;
+    let diamondRates = product?.breakup?.diamondRates;
+    transformed.diamond = {};
+
+    Object.values(diamonds || {})?.forEach((dai, index) => {
+      let {
+        diamond_type,
+        diamond_quality,
+        diamond_shape,
+        diamond_sieve,
+        diamond_cut,
+        diamond_pieces,
+        diamond_weight,
+        diamond_rate,
+      } = dai;
+
+      transformed.diamond[index + 1] = {
+        clarity: diamond_quality?.split("-")?.[0] || "",
+        color: diamond_quality?.split("-")?.[1] || "",
+        cut: diamond_cut,
+        size: diamond_sieve,
+        weight: diamond_weight,
+        rate: diamondRates?.[index + 1] || "",
+        amount: diamondAmount?.[index + 1] || "",
+      };
+    });
+  }
+
+  // Gemstones
+  let gemstones =
+    product.meta_data.find((item) => item.key === "colorstone_details")
+      ?.value || {};
+  for (let key in gemstones) {
+    let {
+      colorstone_quality,
+      colorstone_type,
+      colorstone_shape,
+      colorstone_size,
+      colorstone_pieces,
+      colorstone_weight,
+      colorstone_rate,
+    } = gemstones[key] || {};
+
+    let valueObj = {
+      clarity: colorstone_quality,
+      type: colorstone_type,
+      shape: colorstone_shape,
+      // color,
+      // cut,
+      size: colorstone_size,
+      weight: colorstone_weight,
+    };
+    transformed.gemstone[key] = valueObj;
+  }
+
+  // Making
+  transformed.making = {
+    from:
+      product.meta_data.find((item) => item.key === "making_from")?.value || "",
+    pergram_amt:
+      product.meta_data.find((item) => item.key === "per_gram")?.value || "",
+    wastage:
+      product.meta_data.find((item) => item.key === "wastage_percent")?.value ||
+      "",
+    minimum_making:
+      product.meta_data.find((item) => item.key === "minimum_labour")?.value ||
+      "",
+    amount: product.breakup.labour || "",
+  };
+
+  // Extra charges
+  let extraCharges =
+    product.meta_data.find((item) => item.key === "extra_charges")?.value || {};
+  for (let key in extraCharges) {
+    let { extra_charge_label, extra_charge_value } = extraCharges[key] || {};
+    transformed.extracharges[key] = {
+      label: extra_charge_label,
+      value: extra_charge_value,
+    };
+  }
+
+  // Breakup
+  transformed.breakup = {
+    metal: product.breakup.master.metal || "",
+    diamond: product.breakup.master.diamond || "",
+    gemstone: product.breakup.master.gemstone || "",
+    making: product.breakup.master.labour || "",
+    extra_charges: product.breakup.master.extraCharges || "",
+    tax: product.breakup.tax || "",
+    total: product.breakup.totalPrice || "",
+  };
+
+  // Recursively remove falsy values from the transformed object
+  const removeFalsy = (obj) => {
+    for (let key in obj) {
+      if (obj[key] && typeof obj[key] === "object") {
+        removeFalsy(obj[key]);
+      } else if (!obj[key]) {
+        delete obj[key];
+      }
+    }
+    return obj;
+  };
+
+  return removeFalsy(transformed);
+};
+
 const shopifyProductsMappingArray = [
   {
     jwero_key: [
@@ -1024,4 +1188,6 @@ module.exports = {
   defaultWoocommerceCustomerMapping,
   ebayProductMapping,
   getMarketplaceIdFromCountry,
+  removeEmptyStrings,
+  transformProduct,
 };

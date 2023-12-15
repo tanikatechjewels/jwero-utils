@@ -4,10 +4,16 @@ const { getGemstoneRate } = require("./src/pricing/getGemstoneRate");
 const {
   getAllLabourMasterPricing,
 } = require("./src/pricing/getAllLabourMasterPricing");
+const {
+  removeEmptyStrings,
+  transformProduct,
+} = require("./src/pricing/helper");
 
 module.exports = {
   getProductPrice,
   getDiamondRate,
   getGemstoneRate,
   getAllLabourMasterPricing,
+  removeEmptyStrings,
+  transformProduct,
 };
